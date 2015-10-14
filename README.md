@@ -16,3 +16,10 @@ Actions:
     - Lock vs synchronized
     - Semaphores
     - ExecutePool
+
+Concurrency issues:
+
+    - Synchronization
+        - non-atomic operation, e.g. inc = get value -> add one -> store value
+    - Deadlocks
+    - Starvation
