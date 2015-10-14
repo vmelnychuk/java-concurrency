@@ -4,7 +4,11 @@ Actions:
 
     - Thread vs Runable (new Thread <-> new Runnable)
     - Callable vs Runable (new Callable <-> new Runnable)
-    - Futures 
+    - Futures
+        - isDone
+        - get
+            - null
+            - wait until done
     - ThreadLocal
     - volatile
     - synchronized
