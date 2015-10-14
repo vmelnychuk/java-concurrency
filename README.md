@@ -1,9 +1,14 @@
-## Java template project
-This is quick start java gradle project
+## Java Concurrency project
+This is java project for concurrency tasks
 Actions:
 
-    - clone it:  git clone https://github.com/vmelnychuk/java-template-project.git
-    - remove remote:  git remote remove origin
-    - add new remote:  git remote add origin NEW_ORIGIN
-    - push master:  git push -u origin master
-    - git all stuff:  git push -u origin --all
+    - Thread vs Runable (new Thread <-> new Runnable)
+    - Callable vs Runable (new Callable <-> new Runnable)
+    - Futures 
+    - ThreadLocal
+    - volatile
+    - synchronized
+    - lock
+    - Lock vs synchronized
+    - Semaphores
+    - ExecutePool
