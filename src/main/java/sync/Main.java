@@ -1,13 +1,15 @@
 package sync;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 public class Main {
-    private AtomicInteger count = new AtomicInteger(0);
+    private int count = 0;
 
     public static void main(String[] args) {
         Main app = new Main();
         app.doWork();
+    }
+
+    public synchronized void increment() {
+        count++;
     }
 
     public void doWork() {
@@ -15,7 +17,7 @@ public class Main {
             @Override
             public void run() {
                 for (int i = 0; i < 10000; i++) {
-                    count.incrementAndGet();
+                    increment();
                 }
             }
         });
@@ -24,7 +26,7 @@ public class Main {
             @Override
             public void run() {
                 for (int i = 0; i < 10000; i++) {
-                    count.incrementAndGet();
+                    increment();
                 }
             }
         });
@@ -39,6 +41,6 @@ public class Main {
             e.printStackTrace();
         }
 
-        System.out.println("Count: " + count.get());
+        System.out.println("Count: " + count);
     }
 }
