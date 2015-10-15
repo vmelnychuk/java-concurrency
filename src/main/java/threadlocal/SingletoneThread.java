@@ -1,7 +1,7 @@
 package threadlocal;
 
 public class SingletoneThread extends Thread {
-    public static final int LEANGTH = 10000;
+    public static final int LEANGTH = 100;
     private String id;
 
     public SingletoneThread(String id) {
@@ -11,14 +11,9 @@ public class SingletoneThread extends Thread {
     @Override
     public void run() {
         Singletone.getInstance().setElement(id);
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        String element = Singletone.getInstance().getElement();
-        if (!id.equals(element)) {
-            System.out.println("id: " + id + " element: " + element);
+        String[] elements = Singletone.getInstance().getElement();
+        if (!elements[0].equals(elements[1])) {
+            System.out.println("id: " + elements[0] + " element: " + elements[1]);
         }
     }
 

@@ -2,7 +2,8 @@ package threadlocal;
 
 public class Singletone {
     private static final Singletone ourInstance = new Singletone();
-    private ThreadLocal<String> element = new ThreadLocal<String>();
+    private ThreadLocal<Element> element = new ThreadLocal<Element>();
+    private String value;
 
     public static Singletone getInstance() {
         return ourInstance;
@@ -11,11 +12,13 @@ public class Singletone {
     private Singletone() {
     }
 
-    public String getElement() {
-        return element.get();
+    public String[] getElement() {
+        return element.get().getValues();
     }
 
     public void setElement(String element) {
-            this.element.set(element);
+        this.element.set(new Element(element));
     }
+
+
 }

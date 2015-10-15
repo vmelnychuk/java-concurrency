@@ -13,7 +13,17 @@ Actions:
     - ThreadLocal
     - volatile
     - synchronized
+        - method
+            - static
+            - non-static
+        - object, section
+            - ClassObj
+            - this
+            - field
+        - section
     - lock
+        - locks
+        - ReentrantLock
     - Lock vs synchronized
     - Semaphores
     - ExecutePool
