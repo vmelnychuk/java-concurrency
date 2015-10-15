@@ -6,9 +6,10 @@ Actions:
     - Callable vs Runable (new Callable <-> new Runnable)
     - Futures
         - isDone
+            false is if not ready
         - get
-            - null
-            - wait until done
+            - exception if get(time, unit) when time is less then needed
+            - wait until done if get()
     - ThreadLocal
     - volatile
     - synchronized

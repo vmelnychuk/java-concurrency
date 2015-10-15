@@ -12,25 +12,19 @@ public class CallableTest implements Callable<Integer> {
 
     @Override
     public Integer call() throws Exception {
+        Thread.currentThread().sleep(1000);
         return new Integer(i);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ExecutionException, InterruptedException, TimeoutException {
         ExecutorService executorService = Executors.newCachedThreadPool();
         List<Future<Integer>> results = new LinkedList<Future<Integer>>();
         for(int i = 0; i < 10; i++) {
             results.add(executorService.submit(new CallableTest(i)));
         }
-        for(Future<Integer> element : results) {
-            try {
-                System.out.println(element.get());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } finally {
-                executorService.shutdown();
-            }
+        Future<Integer> res = results.get(results.size()-1);
+        while(res.isDone() == false) {
+            System.out.println(res.get(1000000, TimeUnit.MICROSECONDS));
         }
     }
 }
