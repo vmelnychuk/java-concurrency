@@ -2,29 +2,38 @@ package locks;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 public class Worker {
+
+    private Object lock1 = new Object();
+    private Object lock2 = new Object();
+
     private Random random = new Random();
     private List<Integer> list1 = new ArrayList<Integer>();
     private List<Integer> list2 = new ArrayList<Integer>();
 
-    public synchronized void stageOne() {
-        try {
-            Thread.sleep(1);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+    public void stageOne() {
+        synchronized (lock1) {
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            list1.add(random.nextInt(100));
         }
-        list1.add(random.nextInt(100));
     }
 
-    public synchronized void stageTwo() {
-        try {
-            Thread.sleep(1);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+    public void stageTwo() {
+        synchronized (lock2) {
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            list2.add(random.nextInt(100));
         }
-        list2.add(random.nextInt(100));
     }
 
     public void process() {
