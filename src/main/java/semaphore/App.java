@@ -11,7 +11,7 @@ public class App {
             executionService.submit(new CustomRunnable(i, SemaphoreSinleton.getInstance().getSemaphore()));
         }
 
-        Thread.sleep(1000);
+        Thread.sleep(5000);
         executionService.shutdown();
     }
 }

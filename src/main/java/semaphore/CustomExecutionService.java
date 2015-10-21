@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadLocalRandom;
 
+//TODO: create provider-consumer pattern for submitting tasks
 public class CustomExecutionService {
     private int size;
     private List<CustomRunnable> threads;
@@ -18,9 +19,9 @@ public class CustomExecutionService {
     }
 
     public void submit(CustomRunnable thread) {
-        threads.add(thread);
         try {
             semaphore.acquire();
+            threads.add(thread);
             System.out.println(thread.getId() + " starting...");
             new Thread(thread).start();
         } catch (InterruptedException e) {
