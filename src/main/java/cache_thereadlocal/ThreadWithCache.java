@@ -2,7 +2,6 @@ package cache_thereadlocal;
 
 public class ThreadWithCache extends ThreadBase implements Runnable {
     private Cache cache = Cache.getInstance();
-
     public ThreadWithCache(Integer id) {
         super(id);
     }
@@ -10,7 +9,7 @@ public class ThreadWithCache extends ThreadBase implements Runnable {
     @Override
     public void run() {
         cache.set(id, id);
-        sleepTime();
+        //sleepTime();
         int b = cache.get(id) + SLEEP +1;
     }
 }
