@@ -4,13 +4,11 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class CustomRunnable implements Runnable {
-    private Semaphore semaphore;
     private int id;
     private boolean shutdown;
 
-    public CustomRunnable(int id, Semaphore semaphore) {
+    public CustomRunnable(int id) {
         this.id = id;
-        this.semaphore = semaphore;
         this.shutdown = false;
     }
 
@@ -31,7 +29,7 @@ public class CustomRunnable implements Runnable {
                 break;
             }
         }
-        semaphore.release();
+        SemaphoreSinleton.getInstance().getSemaphore().release();
         System.out.println(id + " is finished");
     }
 
@@ -42,4 +40,5 @@ public class CustomRunnable implements Runnable {
     public int getId() {
         return id;
     }
+
 }

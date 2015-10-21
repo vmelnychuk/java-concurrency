@@ -8,10 +8,9 @@ public class App {
     public static void main(String[] args) throws InterruptedException {
         CustomExecutionService executionService = new CustomExecutionService(SIZE);
         for(int i = 0; i < THREADS_NUMBER; i++) {
-            executionService.submit(new CustomRunnable(i, SemaphoreSinleton.getInstance().getSemaphore()));
+            executionService.submit(new CustomRunnable(i));
         }
 
-        Thread.sleep(5000);
         executionService.shutdown();
     }
 }

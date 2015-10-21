@@ -1,41 +1,50 @@
 package semaphore;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.*;
 
 //TODO: create provider-consumer pattern for submitting tasks
 public class CustomExecutionService {
     private int size;
-    private List<CustomRunnable> threads;
-    private Semaphore semaphore;
+    private LinkedBlockingQueue<CustomRunnable> tasks;
+    private Thread executor;
+    private boolean shutdown = false;
 
     public CustomExecutionService(int size) {
         this.size = size;
-        this.threads = new ArrayList<CustomRunnable>(size);
-        this.semaphore = new Semaphore(size);
+        this.tasks = new LinkedBlockingQueue<CustomRunnable>();
+        Semaphore semaphore = new Semaphore(size);
         SemaphoreSinleton.getInstance().setSemaphore(semaphore);
+        this.executor = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                while (!shutdown) {
+                    try {
+                        SemaphoreSinleton.getInstance().getSemaphore().acquire();
+                        CustomRunnable thread = tasks.take();
+                        System.out.println(thread.getId() + " starting...");
+                        new Thread(thread).start();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 
     public void submit(CustomRunnable thread) {
-        try {
-            semaphore.acquire();
-            threads.add(thread);
-            System.out.println(thread.getId() + " starting...");
-            new Thread(thread).start();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-    public void shutdown() {
-        for(CustomRunnable thread : threads) {
-            thread.shutdown();
-        }
+        tasks.add(thread);
+        executor.start();
     }
 
-    public void randomShutdown() {
-        CustomRunnable thread = threads.get(ThreadLocalRandom.current().nextInt(threads.size()));
-        thread.shutdown();
+    public void shutdown() {
+        shutdown = true;
+        for(CustomRunnable thread : tasks) {
+            thread.shutdown();
+        }
     }
 }
