@@ -22,7 +22,7 @@ public class Runner {
 
     public static void main(String[] args) {
         Runner runner = new Runner();
-        runner.runner(3);
+        runner.runner(1);
     }
 
     public void runner(int times) {

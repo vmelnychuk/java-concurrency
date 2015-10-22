@@ -1,50 +1,64 @@
 package semaphore;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.*;
 
-//TODO: create provider-consumer pattern for submitting tasks
 public class CustomExecutionService {
     private int size;
-    private LinkedBlockingQueue<CustomRunnable> tasks;
+    private Queue<Runnable> tasksToRun;
+    private ConcurrentLinkedQueue<Task> pool;
     private Thread executor;
     private boolean shutdown = false;
 
     public CustomExecutionService(int size) {
         this.size = size;
-        this.tasks = new LinkedBlockingQueue<CustomRunnable>();
+        this.tasksToRun = new ConcurrentLinkedQueue<>();
         Semaphore semaphore = new Semaphore(size);
         SemaphoreSinleton.getInstance().setSemaphore(semaphore);
-        this.executor = new Thread(new Runnable() {
+
+        System.out.println("creating pool");
+        this.pool = new ConcurrentLinkedQueue<Task>();
+        for(int i = 0; i < size; i++) {
+                pool.add(new Task());
+        }
+
+        executor = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(100);
+                    SemaphoreSinleton.getInstance().getSemaphore().acquire();
+                    if (tasksToRun.isEmpty()) {
+                        SemaphoreSinleton.getInstance().getSemaphore().release();
+                    } else {
+                        Runnable taskToRun = tasksToRun.remove();
+                        for(Task task : pool) {
+                            if (task.isFinished()) {
+                                if( task.setTask(taskToRun)) {
+                                    break;
+                                }
+                            }
+                        }
+                    }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                while (!shutdown) {
-                    try {
-                        SemaphoreSinleton.getInstance().getSemaphore().acquire();
-                        CustomRunnable thread = tasks.take();
-                        System.out.println(thread.getId() + " starting...");
-                        new Thread(thread).start();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
             }
         });
+        executor.start();
     }
 
-    public void submit(CustomRunnable thread) {
-        tasks.add(thread);
-        executor.start();
+    public void submit(Runnable taskToRun) {
+        tasksToRun.add(taskToRun);
     }
 
     public void shutdown() {
         shutdown = true;
-        for(CustomRunnable thread : tasks) {
-            thread.shutdown();
+        for(Task task : pool) {
+            task.shutdown();
         }
+        tasksToRun = null;
     }
 }

@@ -10,7 +10,7 @@ public class App {
         for(int i = 0; i < THREADS_NUMBER; i++) {
             executionService.submit(new CustomRunnable(i));
         }
-
+        Thread.sleep(10000);
         executionService.shutdown();
     }
 }
